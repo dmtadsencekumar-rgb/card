@@ -1,0 +1,3257 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<base target="_top">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0">
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+
+body {
+
+  margin: 0;
+
+  background: #f1f1f1;
+
+  font-family:
+    "Noto Sans Devanagari",
+    "Nirmala UI",
+    Arial,
+    sans-serif;
+
+  color: #222;
+
+}
+
+
+.container {
+
+  max-width: 1000px;
+
+  margin: 30px auto;
+
+  padding: 20px;
+
+}
+
+
+/* =====================================
+   FORM
+===================================== */
+
+.form-box {
+
+  background: white;
+
+  padding: 28px;
+
+  border-radius: 16px;
+
+  box-shadow:
+    0 8px 30px rgba(0,0,0,.10);
+
+}
+
+
+.form-title {
+
+  font-size: 25px;
+
+  font-weight: 800;
+
+  color: #55287b;
+
+  margin-bottom: 25px;
+
+}
+
+
+.section-title {
+
+  grid-column: 1 / -1;
+
+  margin-top: 20px;
+
+  padding: 12px 0;
+
+  border-bottom:
+    2px solid #eee;
+
+  color: #55287b;
+
+  font-size: 19px;
+
+  font-weight: 800;
+
+}
+
+
+.grid {
+
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 16px;
+
+}
+
+
+.full {
+
+  grid-column:
+    1 / -1;
+
+}
+
+
+.field {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
+
+}
+
+
+label {
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+}
+
+
+input,
+textarea,
+select {
+
+  width: 100%;
+
+  padding: 12px;
+
+  border:
+    1px solid #d5d5d5;
+
+  border-radius: 8px;
+
+  outline: none;
+
+  font-family: inherit;
+
+  font-size: 13px;
+
+}
+
+
+textarea {
+
+  min-height: 90px;
+
+  resize: vertical;
+
+}
+
+
+input:focus,
+textarea:focus,
+select:focus {
+
+  border-color:
+    #55287b;
+
+}
+
+
+.submit-btn {
+
+  width: 100%;
+
+  margin-top: 25px;
+
+  padding: 15px;
+
+  border: 0;
+
+  border-radius: 9px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #55287b,
+      #7c3290
+    );
+
+  color: white;
+
+  font-size: 17px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+}
+
+
+.submit-btn:disabled {
+
+  opacity: .5;
+
+  cursor: not-allowed;
+
+}
+
+
+.loader {
+
+  display: none;
+
+  text-align: center;
+
+  margin-top: 12px;
+
+  color: #666;
+
+  font-weight: 600;
+
+}
+
+
+/* =====================================
+   MEMBER BOX
+===================================== */
+
+.member-box {
+
+  grid-column:
+    1 / -1;
+
+  border:
+    1px solid #ddd;
+
+  border-radius: 12px;
+
+  padding: 18px;
+
+  background: #fafafa;
+
+}
+
+
+.member-heading {
+
+  font-size: 17px;
+
+  font-weight: 800;
+
+  color: #55287b;
+
+  margin-bottom: 15px;
+
+}
+
+
+.member-box.hidden {
+
+  display: none;
+
+}
+
+
+/* =====================================
+   CARD
+===================================== */
+
+.card-wrapper {
+
+  display: none;
+
+  text-align: center;
+
+}
+
+
+.card-heading {
+
+  color: #55287b;
+
+  margin-bottom: 20px;
+
+}
+
+
+/*
+ A5 LANDSCAPE RATIO
+
+ 210 : 148
+
+ 1050 : 740
+*/
+
+
+#card {
+
+  width: 1050px;
+
+  min-width: 1050px;
+
+  height: 740px;
+
+  min-height: 740px;
+
+  max-width: none;
+
+  margin: auto;
+
+  background:
+    linear-gradient(
+      135deg,
+      #5b247a 0%,
+      #8d2d79 45%,
+      #c03a68 72%,
+      #ff7900 100%
+    );
+
+  position: relative;
+
+  overflow: hidden;
+
+  display: grid;
+
+  grid-template-columns:
+    49% 51%;
+
+  text-align: left;
+
+  box-shadow:
+    0 15px 45px rgba(0,0,0,.18);
+
+}
+
+
+/* =====================================
+   OUTER CURVED BOTTOM DESIGN
+===================================== */
+
+#card::after {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      135deg,
+      #5b247a 0%,
+      #8d2d79 45%,
+      #c03a68 72%,
+      #ff7900 100%
+    );
+
+  z-index: 0;
+
+  pointer-events: none;
+
+}
+
+
+.left,
+.right {
+
+  position: relative;
+
+  z-index: 2;
+
+}
+
+
+/*
+ * White panels stop before the bottom so the
+ * purple/pink/orange curved design is always visible.
+ */
+.left::before,
+.right::before {
+
+  content: "";
+
+  position: absolute;
+
+  top: 10px;
+  bottom: 18px;
+
+  background: #fff;
+
+  z-index: 0;
+
+  pointer-events: none;
+
+}
+
+.left::before {
+
+  left: 8px;
+  right: 8px;
+
+  border-radius:
+    28px 28px 55% 18px /
+    28px 28px 38px 18px;
+
+}
+
+.right::before {
+
+  left: 8px;
+  right: 8px;
+
+  border-radius:
+    28px 28px 18px 55% /
+    28px 28px 18px 38px;
+
+}
+
+
+/* Put all actual card content above the white panel. */
+.left > *,
+.right > * {
+
+  position: relative;
+
+  z-index: 1;
+
+}
+
+.left {
+  overflow: visible;
+}
+
+.bottom-fields {
+  position: relative;
+  z-index: 10;
+}
+
+
+.left {
+
+  padding:
+    30px 25px 24px;
+
+  border-right:
+    2px solid rgba(255,255,255,.55);
+
+}
+
+
+.right {
+
+  padding:
+    30px 38px 30px 30px;
+
+}
+
+
+/* =====================================
+   LEFT CARD
+===================================== */
+
+.date-line {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  color: #55287b;
+
+  font-size: 20px;
+
+  font-weight: 800;
+
+  margin-bottom: 22px;
+
+}
+
+
+.date-line span {
+
+  flex: 1;
+
+  border-bottom:
+    2px solid #55287b;
+
+}
+
+
+.main-heading {
+
+  background:
+    linear-gradient(
+      90deg,
+      #ff8100,
+      #f45116
+    );
+
+  color: white;
+
+  text-align: center;
+
+  border-radius: 22px;
+
+  padding: 14px 18px;
+
+  font-size: 20px;
+
+  font-weight: 800;
+
+  line-height: 1.45;
+
+}
+
+
+.intro {
+  display: none;
+}
+
+
+.months {
+
+  margin-top: 10px;
+
+  width: 100%;
+
+  border: 1.5px solid #ff6b1a;
+
+  border-radius: 6px;
+
+  overflow: hidden;
+
+  display: grid;
+
+  grid-template-columns:
+    1.15fr 1fr 1fr 1fr;
+
+  color: #55287b;
+
+  font-size: 14px;
+
+  font-weight: 800;
+
+  background: #fff;
+
+}
+
+
+.month,
+.month-header,
+.hospital-header-cell,
+.check-cell {
+
+  min-height: 30px;
+
+  padding:
+    4px 7px;
+
+  border-right:
+    1px solid #ff6b1a;
+
+  border-bottom:
+    1px solid #ff6b1a;
+
+  display: flex;
+
+  align-items: center;
+
+  line-height: 1.15;
+
+}
+
+
+.month-header,
+.hospital-header-cell {
+
+  justify-content: center;
+
+  text-align: center;
+
+  font-size: 12.5px;
+
+  font-weight: 900;
+
+  background: #fff8f2;
+
+}
+
+
+.month {
+
+  justify-content: flex-start;
+
+  padding-left: 10px;
+
+}
+
+
+.check-cell {
+
+  justify-content: center;
+
+}
+
+
+.months > :nth-child(4n) {
+
+  border-right: 0;
+
+}
+
+
+.months > :nth-last-child(-n+4) {
+
+  border-bottom: 0;
+
+}
+
+
+.check-box {
+
+  width: 17px;
+
+  height: 17px;
+
+  border:
+    1.7px solid #55287b;
+
+  border-radius: 3px;
+
+  display: block;
+
+  background: #fff;
+
+}
+
+
+.bottom-fields {
+
+  margin-top: 10px;
+
+  position: relative;
+
+  z-index: 5;
+
+  background: #fff;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  border:
+    1.5px solid #ff6b1a;
+
+  border-top: 0;
+
+  border-radius:
+    0 0 6px 6px;
+
+  min-height: 72px;
+
+  color: #55287b;
+
+  font-size: 16px;
+
+  font-weight: 800;
+
+}
+
+
+.seal {
+
+  padding: 12px;
+
+  border-radius: 0;
+
+  border-right:
+    1px solid #ff6b1a;
+
+}
+
+
+.signature {
+
+  padding: 12px;
+
+}
+
+
+/* =====================================
+   RIGHT CARD
+===================================== */
+.health-title {
+  position: relative;
+  background: linear-gradient(90deg, #5a247d, #ff7900);
+  color: white;
+  font-size: 25px;
+  font-weight: 800;
+  text-align: center;
+  padding: 11px 40px;
+  margin: 0 0 20px 0;
+  min-height: 49px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  clip-path: polygon(0% 0%, calc(100% - 25px) 0%, 100% 50%, calc(100% - 25px) 100%, 0% 100%, 20px 50%);
+}
+
+/* इसके बाद .health-title::before और .health-title::after दोनों को CSS से हटा दें */
+
+/* LEFT NOTCH
+   White triangle cuts into the purple bar.
+   This does not use clip-path, so html2canvas can capture it. */
+
+.detail-row {
+
+  display: grid;
+
+  grid-template-columns:
+    145px 20px 1fr;
+
+  align-items: end;
+
+  min-height: 42px;
+
+  font-size: 17px;
+
+}
+
+
+.detail-label {
+
+  color: #55287b;
+
+  font-weight: 800;
+
+}
+
+
+.detail-value {
+
+  min-height: 29px;
+
+  border-bottom:
+    2px dotted #222;
+
+  font-weight: 600;
+
+  word-break: break-word;
+
+}
+
+
+.address-row {
+
+  min-height: 62px;
+
+  align-items: start;
+
+}
+
+
+.address-value {
+
+  line-height: 1.45;
+
+}
+
+
+.family-title {
+
+  text-align: center;
+
+  color: #55287b;
+
+  font-size: 17px;
+
+  font-weight: 800;
+
+  margin:
+    18px 0 10px;
+
+}
+
+
+.family-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap:
+    8px 40px;
+
+}
+
+
+.family-row {
+
+  display: grid;
+
+  grid-template-columns:
+    28px 1fr;
+
+  font-size: 15px;
+
+}
+
+
+.family-value {
+
+  min-height: 23px;
+
+  border-bottom:
+    1.5px solid #222;
+
+}
+
+
+/* =====================================
+   BUTTONS
+===================================== */
+
+.buttons {
+
+  display: flex;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  flex-wrap: wrap;
+
+  margin-top: 20px;
+
+}
+
+
+.action-btn {
+
+  border: 0;
+
+  padding:
+    12px 20px;
+
+  border-radius: 8px;
+
+  color: white;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  background: #55287b;
+
+}
+
+
+.pdf-btn {
+
+  background: #555;
+
+}
+
+
+.drive-btn {
+
+  background: #1a73e8;
+
+  display: none;
+
+}
+
+
+.new-btn {
+
+  background: #ddd;
+
+  color: #222;
+
+}
+.hospital-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 5px 10px 15px;
+  text-align: left;
+}
+
+.hospital-photo {
+  width: 125px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+}
+
+.hospital-info {
+  text-align: left;
+}
+
+.hospital-name {
+  font-size: 27px;
+  font-weight: 900;
+  color: #55287b;
+  line-height: 1.2;
+}
+
+.hospital-location {
+  margin-top: 6px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #666;
+}
+
+
+/* =========================
+   HOSPITAL LINKS
+========================= */
+
+.hospital-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 5px 0 25px;
+}
+
+.hospital-link {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 15px;
+  border-radius: 12px;
+  color: #333;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 3px 10px rgba(0,0,0,.06);
+  transition: .2s ease;
+}
+
+.hospital-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,.12);
+}
+
+.link-icon {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+  color: white;
+}
+
+.google-link .link-icon {
+  background: #55287b;
+}
+
+.insta-link .link-icon {
+  background: #d62976;
+}
+
+.hospital-link strong {
+  display: block;
+  color: #55287b;
+  font-size: 15px;
+}
+
+.hospital-link small {
+  display: block;
+  margin-top: 3px;
+  color: #777;
+  font-size: 12px;
+}
+
+.arrow {
+  margin-left: auto;
+  font-size: 25px;
+  color: #999;
+}
+
+.confirmation-box {
+  margin-top: 25px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: #fafafa;
+}
+
+.confirmation-text {
+  font-size: 14px;
+  line-height: 1.55;
+  color: #222;
+  margin-bottom: 18px;
+}
+
+.confirmation-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  color: #333;
+}
+
+.confirmation-check input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+
+/* Mobile */
+
+@media (max-width: 650px) {
+
+  .hospital-header {
+    gap: 12px;
+  }
+
+  .hospital-photo {
+    width: 95px;
+    height: 80px;
+  }
+
+  .hospital-name {
+    font-size: 20px;
+  }
+
+  .hospital-location {
+    font-size: 13px;
+  }
+
+  .hospital-links {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+.field-help-image {
+  width: 220px;
+  height: auto;
+  display: block;
+  margin: 6px 0 10px;
+  border-radius: 6px;
+}
+
+
+
+/* =====================================
+   MOBILE
+===================================== */
+@media(max-width:700px) {
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .full,
+  .section-title,
+  .member-box {
+    grid-column: auto;
+  }
+
+  /* Mobile preview only */
+  #cardPreviewStage {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+
+  #cardPreviewStage #card {
+    margin: 0;
+    transform-origin: top left;
+  }
+
+}
+
+
+
+/* =================================
+   ONLINE FORM GUIDE
+================================= */
+
+.form-guide {
+  width: 100%;
+  margin: 20px 0 30px;
+  padding: 22px;
+  background: #fff;
+  border: 1px solid #e2e2e2;
+  border-radius: 14px;
+  box-shadow: 0 4px 15px rgba(0,0,0,.06);
+}
+
+
+/* Header */
+
+.guide-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+}
+
+
+.guide-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: #222;
+  line-height: 1.3;
+}
+
+
+/* QR */
+
+.guide-qr-box {
+  width: 145px;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+
+.guide-qr {
+  width: 115px;
+  height: 115px;
+  object-fit: contain;
+  display: block;
+  margin: auto;
+}
+
+
+.guide-qr-text {
+  margin-top: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #55287b;
+}
+
+
+/* Main content */
+
+.guide-content {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 25px;
+  margin-top: 18px;
+}
+
+
+.guide-text {
+  font-size: 16px;
+  line-height: 1.55;
+  color: #222;
+}
+
+
+.guide-text p {
+  margin: 5px 0 8px;
+}
+
+
+.guide-text strong {
+  font-weight: 900;
+}
+
+
+/* Card example */
+
+.guide-card-image-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.guide-card-image {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+
+/* Bottom */
+
+.guide-bottom {
+  margin-top: 18px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+  text-align: center;
+  font-size: 17px;
+  line-height: 1.5;
+  color: #333;
+}
+
+
+/* Mobile */
+
+@media (max-width: 700px) {
+
+  .form-guide {
+    padding: 15px;
+  }
+
+  .guide-header {
+    align-items: center;
+  }
+
+  .guide-title {
+    font-size: 21px;
+  }
+
+  .guide-qr-box {
+    width: 110px;
+  }
+
+  .guide-qr {
+    width: 90px;
+    height: 90px;
+  }
+
+  .guide-content {
+    grid-template-columns: 1fr;
+  }
+
+  .guide-card-image-box {
+    order: -1;
+  }
+
+  .guide-card-image {
+    max-width: 260px;
+  }
+
+  .guide-text {
+    font-size: 8px;
+  }
+
+}
+
+
+/* ==========================================
+   NEW HEALTH CARD DESIGN
+   Preview design only — card stays 1050x740
+========================================== */
+/* ==========================================
+   PERFECT A5 HEALTH CARD DESIGN (SAMPLE MATCH)
+========================================== */
+
+#card {
+  width: 1050px;
+  min-width: 1050px;
+  height: 740px;
+  min-height: 740px;
+  margin: auto;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  background: #5b2380;
+  border-radius: 20px;
+  box-shadow: 0 15px 45px rgba(0,0,0,.18);
+  text-align: left;
+  z-index: 1;
+}
+
+/* Bottom Purple/Orange Gradient Wave */
+#card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 90px;
+  background: linear-gradient(90deg, #5b2380 0%, #7e247c 40%, #ea580c 75%, #ff7900 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* White Panels (Left & Right) */
+.card-left-panel,
+.card-right-panel {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  border-radius: 24px 24px 24px 24px;
+  margin-bottom: 24px; /* नीचे का वेव दिखने के लिए गैप */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+/* LEFT PANEL */
+.card-left-panel {
+  padding: 28px 24px 20px;
+  border-bottom-left-radius: 40px;
+}
+
+.card-date {
+  color: #55287b;
+  font-size: 19px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-date span {
+  flex: 1;
+  min-height: 24px;
+  border-bottom: 2px solid #55287b;
+}
+
+.card-main-heading {
+  margin: 22px auto 14px;
+  width: 92%;
+  padding: 12px 16px;
+  border-radius: 18px;
+  background: linear-gradient(90deg, #ff7a00, #f45116);
+  color: #fff;
+  text-align: center;
+  font-size: 19px;
+  line-height: 1.35;
+  font-weight: 900;
+}
+
+.card-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 14px 0 16px;
+  color: #ea580c;
+  font-size: 15px;
+}
+
+.card-divider span {
+  height: 1.5px;
+  width: 80px;
+  background: #ea580c;
+}
+
+.card-intro {
+  max-width: 90%;
+  margin: 0 auto 20px;
+  color: #222;
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.5;
+  font-weight: 800;
+}
+
+.card-month-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1.5px solid #ff6b1a;
+  border-radius: 6px;
+  overflow: hidden;
+  color: #55287b;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.card-month {
+  min-height: 38px;
+  padding: 6px 12px;
+  border-right: 1.5px solid #ff6b1a;
+  border-bottom: 1.5px solid #ff6b1a;
+  display: flex;
+  align-items: center;
+}
+
+.card-month:nth-child(2n) {
+  border-right: 0;
+}
+
+.card-month:nth-last-child(-n+2) {
+  border-bottom: 0;
+}
+
+.card-sign {
+  min-height: 52px;
+  align-items: flex-start;
+  padding-top: 8px;
+}
+
+/* RIGHT PANEL */
+.card-right-panel {
+  padding: 24px 26px 20px;
+  border-bottom-right-radius: 40px;
+}
+
+/* =====================================
+   HEALTH TITLE (HTML2CANVAS COMPATIBLE)
+===================================== */
+/* =====================================
+   HEALTH TITLE (SEAMLESS ARROW FIX)
+===================================== */
+.card-health-title {
+  position: relative;
+  background: linear-gradient(90deg, #5a247d, #ff7900);
+  color: white;
+  font-size: 23px;
+  font-weight: 900;
+  text-align: center;
+  line-height: 1.1;
+  height: 48px;
+  padding: 0 25px;
+  margin: 0 22px 18px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+}
+
+/* Left Notch */
+.card-health-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  border-top: 24px solid transparent;
+  border-bottom: 24px solid transparent;
+  border-left: 18px solid #ffffff;
+}
+
+/* Right Arrow Point - Seamless (No Gap) */
+.card-health-title::after {
+  content: "";
+  position: absolute;
+  right: -19px; /* 1px overlap jo gap ko seal kar deta hai */
+  top: 0;
+  width: 0;
+  height: 0;
+  border-top: 24px solid transparent;
+  border-bottom: 24px solid transparent;
+  border-left: 20px solid #ff7900;
+}
+
+.card-detail-row {
+  display: grid;
+  grid-template-columns: 110px 16px 1fr;
+  align-items: end;
+  min-height: 36px;
+  font-size: 16.5px;
+}
+
+.card-detail-row span {
+  color: #55287b;
+  font-weight: 900;
+}
+
+.card-detail-row i {
+  color: #55287b;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.card-detail-row strong {
+  min-height: 25px;
+  border-bottom: 1.5px dotted #777;
+  color: #222;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.card-address-row {
+  min-height: 54px;
+  align-items: start;
+}
+
+.card-family-title {
+  margin: 16px 0 10px;
+  color: #55287b;
+  text-align: center;
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.family-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 30px;
+}
+
+.family-row {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  min-height: 28px;
+  font-size: 15px;
+  align-items: end;
+}
+
+.family-row span:first-child {
+  color: #55287b;
+  font-weight: 800;
+}
+
+.family-value {
+  min-height: 20px;
+  border-bottom: 1.5px solid #555;
+}
+@media(max-width:700px) {
+  #card {
+    width: 1050px;
+    min-width: 1050px;
+    height: 740px;
+    min-height: 740px;
+  }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<!-- =================================
+     FORM
+================================= -->
+
+
+
+<div
+  class="form-box"
+  id="formBox">
+
+<div class="hospital-header">
+
+  <img
+    class="hospital-photo"
+    src="https://lh3.googleusercontent.com/d/11lHV-OnWMLbsSNr58IAlBATH6_pVK5P5"
+    alt="लाइफ़ लाइन मल्टीस्पेलिस्ट हॉस्पिटल">
+
+  <div class="hospital-info">
+
+    <div class="hospital-name">
+      लाइफ़ लाइन मल्टीस्पेलिस्ट हॉस्पिटल
+    </div>
+
+    <div class="hospital-location">
+      कॉलेज रोड़ कुरूद (धमतरी)
+    </div>
+
+  </div>
+
+</div>
+
+
+<div class="hospital-links">
+
+  <a
+    href="https://www.google.com/search?kgmid=/g/11xlb52n1p&hl=en-IN&q=LIFE+LINE+MULTISPECIALITY+HOSPITAL"
+    target="_blank"
+    class="hospital-link google-link">
+
+    <span class="link-icon">📍</span>
+
+    <span>
+      <strong>अस्पताल के बारे में जानिये</strong>
+      <small>Google पर अस्पताल देखें</small>
+    </span>
+
+    <span class="arrow">›</span>
+
+  </a>
+
+
+  <a
+     href="https://www.instagram.com/reel/DaAQAK6Cbvc/?igsh=eTZjdmhwaXZnMm11"
+    target="_blank"
+    class="hospital-link insta-link">
+
+    <span class="link-icon">▶</span>
+
+    <span>
+      <strong>अस्पताल का Short Video देखें</strong>
+      <small>Instagram पर वीडियो देखें</small>
+    </span>
+
+    <span class="arrow">›</span>
+
+  </a>
+
+</div>
+
+
+
+
+
+<!-- =================================
+     ONLINE FORM GUIDE
+================================= -->
+
+<div class="form-guide">
+
+  <div class="guide-header">
+
+    <div class="guide-title">
+      ऑनलाइन फॉर्म कैसे भरें :–
+    </div>
+
+    <div class="guide-qr-box">
+
+      <img
+        class="guide-qr"
+        src="https://lh3.googleusercontent.com/d/1Ai-DgD4FGxX7lb28anmqZzGSfL4cFkHo"
+        alt="Online Registration QR Code">
+
+      <div class="guide-qr-text">
+        QR Code स्कैन करके<br>
+        ऑनलाइन रजिस्ट्रेशन करें
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="guide-content">
+
+    <div class="guide-text">
+
+      <p>
+        कार्ड बनाने की तिथि – जिस दिन आप कार्ड का रजिस्ट्रेशन चालू करेंगे,
+        तारीख कार्ड में लिखे।
+      </p>
+
+      <p>
+        <strong>1. रजिस्ट्रेशन एवं कार्ड क्रमांक</strong>
+        – कार्ड नंबर लिखे।
+      </p>
+
+      <p>
+        <strong>2. Loc Code</strong>
+        – loc code लिखे।
+      </p>
+
+      <p>
+        <strong>3. कार्डधारी का पूरा नाम</strong>
+        – जिनके नाम से कार्ड होगा / बनेगा उसी का पूरा नाम लिखे।
+      </p>
+
+      <p>
+        <strong>4. उम्र</strong>
+        – अपना सही उम्र लिखे।
+      </p>
+
+      <p>
+        <strong>5. पता</strong>
+        – अपना पता लिखे, वार्ड नंबर, गांव, तहसील, जिला।
+      </p>
+
+      <p>
+        <strong>6. मोबाइल नंबर</strong>
+        – कार्डधारी का मोबाइल नंबर लिखे।
+      </p>
+
+      <p>
+        <strong>7. कार्य</strong>
+        – कृपया अपना काम या व्यवसाय के बारे में लिखे।
+      </p>
+
+      <p>
+        <strong>8. स्वास्थ्य समस्याएं</strong>
+        – वर्तमान में या पूर्व में कोई स्वास्थ्य समस्या हो तो अवश्य लिखे।
+      </p>
+
+      <p>
+        <strong>9. इलाज</strong>
+        – यदि कहीं इलाज कराया है तो अवश्य लिखे।
+      </p>
+
+      <p>
+        <strong>10. परिवार के सदस्यों की संख्या</strong>
+        – परिवार के सदस्यों की संख्या 01–10 के बीच में लिखे।
+      </p>
+
+      <p>
+        <strong>दूसरा सदस्य का नाम</strong>
+        – परिवार में अन्य दूसरे सदस्य का पूरा नाम लिखे।
+      </p>
+
+      <p>
+        <strong>कार्डधारी से रिश्ता</strong>
+        – जिसके नाम से कार्ड बन रहा है उनसे सदस्य का रिश्ता चुनें।
+      </p>
+
+      <p>
+        <strong>मोबाइल नंबर, उम्र, कार्य, स्वास्थ्य समस्या, इलाज</strong>
+        – सभी जानकारी सही-सही भरें।
+      </p>
+
+      <p>
+        ठीक इसी प्रकार आपके परिवार में जितने सदस्य हैं,
+        सबका जानकारी भरें।
+      </p>
+
+      <p>
+        ऑनलाइन रजिस्ट्रेशन करने से पहले कार्ड को इस प्रकार भर लें।
+      </p>
+
+    </div>
+
+
+    <div class="guide-card-image-box">
+
+      <img
+        class="guide-card-image"
+        src="https://lh3.googleusercontent.com/d/1BXjhDzZ_FkTt0xT9P8i8Xxx-0cYmgpoF"
+        alt="स्वास्थ्य परीक्षण कार्ड उदाहरण">
+
+    </div>
+
+  </div>
+
+
+  <div class="guide-bottom">
+
+    <strong>
+      फॉर्म की जानकारी सबमिट करने से पहले एक बार जानकारी जांच ले,
+      फिर सबमिट करें।
+    </strong>
+
+  </div>
+
+</div>
+
+
+
+<div class="form-title">
+
+निःशुल्क स्वास्थ्य परीक्षण कार्ड
+
+</div>
+
+
+<form id="entryForm">
+
+
+<div class="grid">
+
+
+<!-- ===============================
+     CARD HOLDER
+================================ -->
+
+
+<div class="section-title">
+
+कार्डधारी की जानकारी
+
+</div>
+
+
+<div class="field">
+
+  <label>
+    LOC Code क्रमांक
+  </label>
+
+  <img
+    class="field-help-image"
+    src="https://lh3.googleusercontent.com/d/1n5JmLw4oMZu2G43zadPTo_cjLKBwnb6-"
+    alt="LOC Code">
+
+  <input
+    type="text"
+    id="locCode"
+    placeholder="आपके कार्ड में जो LOC नंबर भरकर दिया गया होगा उसे लिखे"
+    required>
+
+</div>
+
+<div class="field">
+
+<label>
+रजिस्ट्रेशन / कार्ड नंबर
+</label>
+
+<img
+  class="field-help-image"
+  src="https://lh3.googleusercontent.com/d/1n5JmLw4oMZu2G43zadPTo_cjLKBwnb6-"
+  alt="कार्ड नंबर कहाँ देखें">
+
+<input
+  type="text"
+  id="registrationNumber"
+  placeholder="आपके कार्ड में जो कार्ड नंबर भरकर दिया गया होगा उसे लिखे"
+  required>
+
+</div>
+<div class="field">
+
+<label>
+1. कार्डधारी का पूरा नाम
+</label>
+
+<input
+  type="text"
+  id="cardholderName"
+  required>
+
+</div>
+
+
+<div class="field">
+
+<label>
+उम्र
+</label>
+
+<input
+  type="number"
+  id="cardholderAge">
+
+</div>
+
+
+<div class="field">
+
+<label>
+मोबाईल नंबर
+</label>
+
+<input
+  type="tel"
+  id="cardholderMobile"
+  required>
+
+</div>
+
+
+<div class="field full">
+
+<label>
+पता — पूरा लिखे : वार्ड क्रमांक, गांव, तहसील, जिला
+</label>
+
+<textarea
+  id="cardholderAddress"
+  required></textarea>
+
+</div>
+
+
+<div class="field">
+
+<label>
+कार्य
+</label>
+
+<input
+  type="text"
+  id="cardholderWork"
+  required>
+
+</div>
+
+
+<div class="field">
+
+<label>
+स्वास्थ्य समस्या
+(वर्तमान में या पहले का भी)
+</label>
+
+<textarea
+  id="cardholderHealth"></textarea>
+
+</div>
+
+
+<div class="field">
+
+<label>
+ईलाज
+(यदि कही ईलाज कराए है तो लिखिये)
+</label>
+
+<textarea
+  id="cardholderTreatment"></textarea>
+
+</div>
+
+
+<div class="field">
+
+<label>
+कार्डधारी को मिलाकर परिवार में कुल सदस्यों की संख्या
+</label>
+
+<select
+  id="totalMembers"
+  required>
+
+<option value="">
+चुनें
+</option>
+
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+<option value="7">7</option>
+<option value="8">8</option>
+<option value="9">9</option>
+<option value="10">10</option>
+
+</select>
+
+</div>
+
+
+<!-- ===============================
+     MEMBERS
+================================ -->
+
+<div class="section-title">
+
+परिवार के सदस्यों की जानकारी
+
+</div>
+
+
+<div
+  id="membersContainer"
+  class="full">
+
+</div>
+
+
+</div>
+
+<div class="confirmation-box">
+
+  <div class="confirmation-text">
+    आपका रजिस्ट्रेशन फॉर्म सफलता पूर्वक भरे जाने के बाद सबमिट
+    करने से पहले अपनी जानकारी सही से चेक कर लेवे। चेक करके
+    नीचे लिखे चेक बॉक्स में टिक लगाए, उसके बाद ही सबमिट करे।
+    धन्यवाद! 🙏 🙏 👍
+  </div>
+
+  <label class="confirmation-check">
+
+    <input
+      type="checkbox"
+      id="confirmInfo">
+
+    <span>
+      हमारे द्वारा फॉर्म को चेक किया गया है, भरा हुआ जानकारी सही है!
+    </span>
+
+  </label>
+
+</div>
+
+
+
+<button
+  type="submit"
+  class="submit-btn"
+  id="submitBtn"
+  disabled>
+
+कार्ड बनाएं
+
+</button>
+
+
+<div
+  class="loader"
+  id="loader">
+
+कृपया प्रतीक्षा करें... कार्ड बनाया जा रहा है।
+
+</div>
+
+
+</form>
+
+</div>
+
+
+<!-- =================================
+     CARD
+================================= -->
+
+<div
+  class="card-wrapper"
+  id="cardWrapper">
+
+
+<h2 class="card-heading">
+
+आपका स्वास्थ्य परीक्षण कार्ड
+
+</h2>
+
+
+<div id="cardPreviewStage">
+
+<div id="card">
+
+  <div class="card-left-panel">
+
+    <div class="card-date">
+      कार्ड बनाने की तिथि :
+      <span id="cDate"></span>
+    </div>
+
+    <div class="card-main-heading">
+      माह में 1 बार साल में पूरा 12 बार रजिस्टर सभी लाभ ले सकते हैं।
+    </div>
+
+    <div class="card-divider">
+      <span></span><b>◆ ◆ ◆</b><span></span>
+    </div>
+
+    <div class="card-intro">
+      हर महीने एक बार मुफ्त स्वास्थ्य जाँच और साल में पूरा 12 बार
+      मुफ्त परीक्षण। परिवार का कोई भी सदस्य इसे करवा सकता है।
+    </div>
+
+    <div class="card-month-grid">
+
+      <div class="card-month">जनवरी :</div>
+      <div class="card-month">जुलाई :</div>
+
+      <div class="card-month">फरवरी :</div>
+      <div class="card-month">अगस्त :</div>
+
+      <div class="card-month">मार्च :</div>
+      <div class="card-month">सितंबर :</div>
+
+      <div class="card-month">अप्रैल :</div>
+      <div class="card-month">अक्टूबर :</div>
+
+      <div class="card-month">मई :</div>
+      <div class="card-month">नवंबर :</div>
+
+      <div class="card-month">जून :</div>
+      <div class="card-month">दिसंबर :</div>
+
+      <div class="card-month card-sign">seal:</div>
+      <div class="card-month card-sign">सिग्नेचर / मो.नं.</div>
+
+    </div>
+
+  </div>
+
+
+  <div class="card-right-panel">
+
+    <div class="card-health-title">
+      निःशुल्क स्वास्थ्य परीक्षण कार्ड
+    </div>
+
+    <div class="card-detail-row">
+      <span>LOC code</span><i>:</i><strong id="cLoc"></strong>
+    </div>
+
+    <div class="card-detail-row">
+      <span>कार्ड नंबर</span><i>:</i><strong id="cCardNo"></strong>
+    </div>
+
+    <div class="card-detail-row">
+      <span>नाम</span><i>:</i><strong id="cName"></strong>
+    </div>
+
+    <div class="card-detail-row">
+      <span>पिता/पति</span><i>:</i><strong></strong>
+    </div>
+
+    <div class="card-detail-row">
+      <span>उम्र</span><i>:</i><strong id="cAge"></strong>
+    </div>
+
+    <div class="card-detail-row card-address-row">
+      <span>पता</span><i>:</i><strong id="cAddress"></strong>
+    </div>
+
+    <div class="card-detail-row">
+      <span>मो.नं.</span><i>:</i><strong id="cMobile"></strong>
+    </div>
+
+    <div class="card-family-title">
+      परिवार में सदस्यों की संख्या एवं नाम :
+    </div>
+
+    <div class="family-grid" id="cardFamilyGrid"></div>
+
+  </div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="buttons">
+
+
+<button
+  class="action-btn"
+  onclick="downloadPNG()">
+
+Download PNG
+
+</button>
+
+
+<button
+  class="action-btn pdf-btn"
+  onclick="downloadPDF()">
+
+Download A5 PDF
+
+</button>
+
+
+<button
+  class="action-btn drive-btn"
+  id="driveBtn"
+  onclick="openDrive()">
+
+Open Drive
+
+</button>
+
+
+<button
+  class="action-btn new-btn"
+  onclick="newEntry()">
+
+New Entry
+
+</button>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+<script>
+
+const API_URL = "https://script.google.com/macros/s/AKfycbyGJLO02CWT0pbK94r6_xbnhRnTFuxJEgvvkkpLMuhHRPGUQVvKo0HfBaUhUSrLgPsd/exec";
+
+/* =====================================
+   CREATE FAMILY FIELDS
+===================================== */
+
+const membersContainer =
+  document.getElementById(
+    "membersContainer"
+  );
+
+
+const totalMembers =
+  document.getElementById(
+    "totalMembers"
+  );
+
+
+function createMemberFields() {
+
+  membersContainer.innerHTML = "";
+
+
+  for (
+    let i = 2;
+    i <= 10;
+    i++
+  ) {
+
+    const box =
+      document.createElement(
+        "div"
+      );
+
+
+    box.className =
+      "member-box hidden";
+
+
+    box.id =
+      "memberBox" + i;
+
+
+    box.innerHTML = `
+
+      <div class="member-heading">
+        ${i}.
+        ${getMemberHeading(i)}
+      </div>
+
+      <div class="grid">
+
+        <div class="field">
+          <label>
+            ${i}.
+            परिवार में सदस्य का पूरा नाम
+          </label>
+
+          <input
+            type="text"
+            id="member${i}Name">
+        </div>
+
+
+     <div class="field">
+
+  <label>
+    कार्डधारी से रिश्ता
+  </label>
+
+  <select id="member${i}Relation">
+
+    <option value="">Choose</option>
+
+    <option value="माँ">माँ</option>
+    <option value="पिता">पिता</option>
+    <option value="पति">पति</option>
+    <option value="पत्नी">पत्नी</option>
+    <option value="बेटा">बेटा</option>
+    <option value="बेटी">बेटी</option>
+    <option value="भाई">भाई</option>
+    <option value="बहन">बहन</option>
+    <option value="दादा">दादा</option>
+    <option value="दादी">दादी</option>
+    <option value="पोता">पोता</option>
+    <option value="पोती">पोती</option>
+    <option value="बहू">बहू</option>
+    <option value="दामाद">दामाद</option>
+    <option value="भाभी">भाभी</option>
+    <option value="भतीजी">भतीजी</option>
+    <option value="भतीजा">भतीजा</option>
+    <option value="भांजा">भांजा</option>
+    <option value="भांजी">भांजी</option>
+    <option value="बुआ">बुआ</option>
+    <option value="अन्य">अन्य</option>
+
+  </select>
+
+</div>
+
+
+        <div class="field">
+
+          <label>
+            सदस्य की उम्र
+          </label>
+
+          <input
+            type="number"
+            id="member${i}Age">
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            सदस्य का मोबाईल नंबर
+          </label>
+
+          <input
+            type="tel"
+            id="member${i}Mobile">
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            कार्य
+          </label>
+
+          <input
+            type="text"
+            id="member${i}Work">
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            स्वास्थ्य समस्या
+          </label>
+
+          <textarea
+            id="member${i}Health"></textarea>
+
+        </div>
+
+
+        <div class="field full">
+
+          <label>
+            इलाज
+            (यदि कही इलाज कराए है तो लिखिये)
+          </label>
+
+          <textarea
+            id="member${i}Treatment"></textarea>
+
+        </div>
+
+      </div>
+
+    `;
+
+
+    membersContainer.appendChild(
+      box
+    );
+
+  }
+
+}
+
+
+function getMemberHeading(i) {
+
+  const names = {
+
+    2:
+      "[ परिवार में दूसरे सदस्य का पूरा नाम ]",
+
+    3:
+      "[ परिवार में तीसरे सदस्य का पूरा नाम ]",
+
+    4:
+      "[ चौथे सदस्य का नाम ]",
+
+    5:
+      "[ पांचवे सदस्य का नाम ]",
+
+    6:
+      "[ छठवें सदस्य का नाम ]",
+
+    7:
+      "[ सातवें सदस्य का नाम ]",
+
+    8:
+      "[ आठवें सदस्य का नाम ]",
+
+    9:
+      "[ नवव्वे सदस्य का नाम ]",
+
+    10:
+      "[ दसवें सदस्य का नाम ]"
+
+  };
+
+
+  return names[i] || "";
+}
+
+
+createMemberFields();
+
+
+/* =====================================
+   SHOW REQUIRED NUMBER OF MEMBERS
+===================================== */
+
+totalMembers.addEventListener(
+  "change",
+  function() {
+
+    const count =
+      Number(
+        this.value
+      );
+
+
+    for (
+      let i = 2;
+      i <= 10;
+      i++
+    ) {
+
+      const box =
+        document.getElementById(
+          "memberBox" + i
+        );
+
+
+      if (
+        count >= i
+      ) {
+
+        box.classList.remove(
+          "hidden"
+        );
+
+      } else {
+
+        box.classList.add(
+          "hidden"
+        );
+
+      }
+
+    }
+
+  }
+);
+
+
+/* =====================================
+   MOBILE CARD PREVIEW
+   Real card remains 1050x740.
+===================================== */
+
+function resizeCardPreview() {
+
+  const stage = document.getElementById("cardPreviewStage");
+  const card = document.getElementById("card");
+
+  if (!stage || !card) return;
+
+  if (window.innerWidth <= 700) {
+
+    const availableWidth = Math.max(1, stage.clientWidth - 20);
+    const scale = Math.min(availableWidth / 1050, 1);
+
+    card.style.transform = "scale(" + scale + ")";
+    card.style.transformOrigin = "top left";
+
+    stage.style.height = (740 * scale) + "px";
+    stage.style.paddingLeft =
+      ((stage.clientWidth - (1050 * scale)) / 2) + "px";
+
+  } else {
+
+    card.style.transform = "none";
+    card.style.transformOrigin = "top left";
+
+    stage.style.height = "740px";
+    stage.style.paddingLeft = "0";
+  }
+}
+
+
+/* Capture original card, not scaled mobile preview. */
+async function captureOriginalCard(scale) {
+
+  const card = document.getElementById("card");
+
+  const oldTransform = card.style.transform;
+  const oldOrigin = card.style.transformOrigin;
+
+  card.style.transform = "none";
+  card.style.transformOrigin = "top left";
+
+  await new Promise(requestAnimationFrame);
+
+  try {
+
+    return await html2canvas(card, {
+      scale: scale,
+      useCORS: true,
+      backgroundColor: "#ffffff",
+      width: 1050,
+      height: 740,
+      windowWidth: 1050,
+      windowHeight: 740
+    });
+
+  } finally {
+
+    card.style.transform = oldTransform;
+    card.style.transformOrigin = oldOrigin;
+
+    resizeCardPreview();
+  }
+}
+
+
+/* =====================================
+   FORM SUBMIT
+===================================== */
+
+const form =
+  document.getElementById(
+    "entryForm"
+  );
+
+
+const submitBtn =
+  document.getElementById(
+    "submitBtn"
+  );
+
+
+const loader =
+  document.getElementById(
+    "loader"
+  );
+
+
+const confirmInfo =
+  document.getElementById("confirmInfo");
+
+confirmInfo.addEventListener(
+  "change",
+  function() {
+
+    submitBtn.disabled =
+      !this.checked;
+
+  }
+);
+
+
+
+form.addEventListener(
+  "submit",
+  function(e) {
+
+    e.preventDefault();
+
+
+    const data = {
+
+      locCode:
+        value("locCode"),
+
+      registrationNumber:
+        value(
+          "registrationNumber"
+        ),
+
+      cardholderName:
+        value(
+          "cardholderName"
+        ),
+
+      cardholderAge:
+        value(
+          "cardholderAge"
+        ),
+
+      cardholderMobile:
+        value(
+          "cardholderMobile"
+        ),
+
+      cardholderAddress:
+        value(
+          "cardholderAddress"
+        ),
+
+      cardholderWork:
+        value(
+          "cardholderWork"
+        ),
+
+      cardholderHealth:
+        value(
+          "cardholderHealth"
+        ),
+
+      cardholderTreatment:
+        value(
+          "cardholderTreatment"
+        ),
+
+      totalMembers:
+        value(
+          "totalMembers"
+        ),
+
+      members: {}
+
+    };
+
+
+    const count =
+      Number(
+        data.totalMembers
+      );
+
+
+    /*
+     * Collect members
+     */
+
+    for (
+      let i = 2;
+      i <= count;
+      i++
+    ) {
+
+      data.members[i] = {
+
+        name:
+          value(
+            "member" +
+            i +
+            "Name"
+          ),
+
+        relation:
+          value(
+            "member" +
+            i +
+            "Relation"
+          ),
+
+        age:
+          value(
+            "member" +
+            i +
+            "Age"
+          ),
+
+        mobile:
+          value(
+            "member" +
+            i +
+            "Mobile"
+          ),
+
+        work:
+          value(
+            "member" +
+            i +
+            "Work"
+          ),
+
+        health:
+          value(
+            "member" +
+            i +
+            "Health"
+          ),
+
+        treatment:
+          value(
+            "member" +
+            i +
+            "Treatment"
+          )
+
+      };
+
+    }
+
+
+    submitBtn.disabled = true;
+    loader.style.display = "block";
+
+    /*
+     * Netlify frontend -> Apps Script Web API
+     * google.script.run is NOT used here.
+     */
+    apiCall("saveEntry", { data: data })
+      .then(async function(result) {
+
+        if (!result || !result.success) {
+          throw new Error(
+            result && result.error
+              ? result.error
+              : "Entry save nahi hui."
+          );
+        }
+
+        const today = new Date();
+
+        setText("cDate", formatDateObject(today));
+        setText("cLoc", data.locCode);
+        setText("cCardNo", data.registrationNumber);
+        setText("cName", data.cardholderName);
+        setText("cAge", data.cardholderAge);
+        setText("cAddress", data.cardholderAddress);
+        setText("cMobile", data.cardholderMobile);
+
+        createCardFamily(data);
+
+        document.getElementById("formBox").style.display = "none";
+        document.getElementById("cardWrapper").style.display = "block";
+
+        resizeCardPreview();
+
+        await sleep(500);
+
+        const canvas = await captureOriginalCard(2);
+
+        const imageData = canvas.toDataURL("image/png");
+
+        return apiCall("saveCardToDrive", {
+          // Support the original Apps Script parameter names too
+          base64Data: imageData,
+          cardId: result.id,
+
+          // Keep these aliases for compatibility
+          imageData: imageData,
+          id: result.id,
+
+          row: result.row
+        });
+      })
+      .then(function(driveResult) {
+
+        if (driveResult && driveResult.success) {
+          window.cardDriveUrl = driveResult.url;
+
+          document.getElementById("driveBtn").style.display =
+            "inline-block";
+        } else if (driveResult && driveResult.error) {
+          throw new Error(driveResult.error);
+        }
+
+        loader.style.display = "none";
+        submitBtn.disabled = false;
+      })
+      .catch(function(error) {
+
+        console.error("Netlify/API error:", error);
+
+        alert("Error: " + (error.message || error));
+
+        resetSubmit();
+      });
+
+  }
+);
+
+
+/* =====================================
+   CARD FAMILY
+===================================== */
+
+function createCardFamily(data) {
+
+  const grid =
+    document.getElementById(
+      "cardFamilyGrid"
+    );
+
+
+  grid.innerHTML = "";
+
+
+  const count =
+    Number(
+      data.totalMembers
+    );
+
+
+  /*
+   * Cardholder = Member 1
+   */
+
+  addCardMember(
+    grid,
+    1,
+    data.cardholderName
+  );
+
+
+  /*
+   * Members 2-10
+   */
+
+  for (
+    let i = 2;
+    i <= count;
+    i++
+  ) {
+
+    addCardMember(
+      grid,
+      i,
+      data.members[i]
+        ? data.members[i].name
+        : ""
+    );
+
+  }
+
+}
+
+
+function addCardMember(
+  grid,
+  number,
+  name
+) {
+
+  const div =
+    document.createElement(
+      "div"
+    );
+
+
+  div.className =
+    "family-row";
+
+
+  div.innerHTML = `
+
+    <span>${number}.</span>
+
+    <span class="family-value">
+      ${escapeHtml(name || "")}
+    </span>
+
+  `;
+
+
+  grid.appendChild(
+    div
+  );
+
+}
+
+
+/* =====================================
+   NETLIFY -> APPS SCRIPT API
+===================================== */
+
+async function apiCall(action, payload) {
+
+  const response = await fetch(API_URL, {
+    method: "POST",
+    redirect: "follow",
+    credentials: "omit",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify({
+      action: action,
+      ...payload
+    })
+  });
+
+  const text = await response.text();
+
+  if (!response.ok) {
+    throw new Error("Apps Script HTTP " + response.status);
+  }
+
+  let result;
+
+  try {
+    result = JSON.parse(text);
+  } catch (err) {
+    throw new Error(
+      "Apps Script ne JSON response nahi diya: " +
+      text.slice(0, 200)
+    );
+  }
+
+  return result;
+}
+
+
+/* =====================================
+   HELPERS
+===================================== */
+
+function value(id) {
+
+  const el =
+    document.getElementById(
+      id
+    );
+
+
+  return el
+    ? el.value.trim()
+    : "";
+
+}
+
+
+function setText(
+  id,
+  value
+) {
+
+  const el =
+    document.getElementById(
+      id
+    );
+
+
+  if (el) {
+
+    el.textContent =
+      value || "";
+
+  }
+
+}
+
+
+function formatDateObject(
+  date
+) {
+
+  const d =
+    String(
+      date.getDate()
+    ).padStart(
+      2,
+      "0"
+    );
+
+
+  const m =
+    String(
+      date.getMonth() + 1
+    ).padStart(
+      2,
+      "0"
+    );
+
+
+  const y =
+    date.getFullYear();
+
+
+  return (
+    d +
+    "/" +
+    m +
+    "/" +
+    y
+  );
+
+}
+
+
+function sleep(ms) {
+
+  return new Promise(
+    resolve =>
+      setTimeout(
+        resolve,
+        ms
+      )
+  );
+
+}
+
+
+function resetSubmit() {
+
+  submitBtn.disabled =
+    false;
+
+  loader.style.display =
+    "none";
+
+}
+
+
+function escapeHtml(
+  value
+) {
+
+  return String(value)
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+/* =====================================
+   DOWNLOAD PNG
+===================================== */
+
+async function downloadPNG() {
+
+  const card =
+    document.getElementById(
+      "card"
+    );
+
+
+  const canvas =
+    await captureOriginalCard(3);
+
+
+  const link =
+    document.createElement(
+      "a"
+    );
+
+
+  link.download =
+    "Health-Card-" +
+    document.getElementById(
+      "cCardNo"
+    ).textContent +
+    ".png";
+
+
+  link.href =
+    canvas.toDataURL(
+      "image/png"
+    );
+
+
+  link.click();
+
+}
+
+
+/* =====================================
+   A5 LANDSCAPE PDF
+===================================== */
+
+async function downloadPDF() {
+
+  const card =
+    document.getElementById(
+      "card"
+    );
+
+
+  const canvas =
+    await captureOriginalCard(3);
+
+
+  const imgData =
+    canvas.toDataURL(
+      "image/png"
+    );
+
+
+  const {
+    jsPDF
+  } = window.jspdf;
+
+
+  const pdf =
+    new jsPDF({
+
+      orientation:
+        "landscape",
+
+      unit:
+        "mm",
+
+      format:
+        "a5"
+
+    });
+
+
+  pdf.addImage(
+    imgData,
+    "PNG",
+    0,
+    0,
+    210,
+    148
+  );
+
+
+  pdf.save(
+
+    "Health-Card-" +
+
+    document
+      .getElementById(
+        "cCardNo"
+      )
+      .textContent +
+
+    ".pdf"
+
+  );
+
+}
+
+
+/* =====================================
+   OPEN DRIVE
+===================================== */
+
+function openDrive() {
+
+  if (
+    window.cardDriveUrl
+  ) {
+
+    window.open(
+      window.cardDriveUrl,
+      "_blank"
+    );
+
+  }
+
+}
+
+
+/* =====================================
+   NEW ENTRY
+===================================== */
+
+function newEntry() {
+
+  document
+    .getElementById(
+      "entryForm"
+    )
+    .reset();
+
+
+  /*
+   * Hide family boxes
+   */
+
+  for (
+    let i = 2;
+    i <= 10;
+    i++
+  ) {
+
+    const box =
+      document.getElementById(
+        "memberBox" + i
+      );
+
+
+    if (box) {
+
+      box.classList.add(
+        "hidden"
+      );
+
+    }
+
+  }
+
+
+  document
+    .getElementById(
+      "formBox"
+    )
+    .style.display =
+      "block";
+
+
+  document
+    .getElementById(
+      "cardWrapper"
+    )
+    .style.display =
+      "none";
+
+
+  document
+    .getElementById(
+      "driveBtn"
+    )
+    .style.display =
+      "none";
+
+
+  window.cardDriveUrl =
+    "";
+
+
+  submitBtn.disabled =
+    false;
+
+
+  loader.style.display =
+    "none";
+
+}
+
+
+window.addEventListener("resize", resizeCardPreview);
+</script>
+
+</body>
+
+</html>
